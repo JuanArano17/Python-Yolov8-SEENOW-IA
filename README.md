@@ -32,7 +32,10 @@ These instructions will guide you through the setup process and demonstrate how 
 What things you need to install the software and how to install them:
 
 ```
-Python 3.10+
+Python 3.9
+PyThorch
+gtts
+playground
 Ultrlytics
 ```
 
