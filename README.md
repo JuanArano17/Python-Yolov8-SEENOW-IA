@@ -60,10 +60,10 @@ Provide examples on how to use the system.
 
 ## Authors
 
-- **Juan Pablo Arano** - *Initial work* - [JohnDoe](https://github.com/JuanArano17)
-- **Sofia Alejandra Prieto** - *Feature Implementation* - [JaneSmith](https://github.com/SofiaPrieto)
-- **Sebastian Portillo** - *Testing and QA* - [MikeJohnson](https://github.com/MikeJohnson)
-- **Gianluca Zinni** - *Documentation* - [AliceBrown](https://github.com/AliceBrown)
+- **Juan Pablo Arano** - *Initial work* - [Juan Arano](https://github.com/JuanArano17)
+- **Sofia Alejandra Prieto** - *Feature Implementation* - [Sofia Prieto](https://github.com/SofiaPrieto)
+- **Sebastian Portillo** - *Testing and QA* - [Sebastian Portillo](https://github.com/SebaPortill0)
+- **Gianluca Zinni** - *Documentation* - [Gianluca Zinni](https://github.com/GianlucaZinni)
 
 See also the list of [contributors](https://github.com/YourUsername/SEENOW/contributors) who participated in this project.
 
