@@ -32,23 +32,24 @@ These instructions will guide you through the setup process and demonstrate how 
 What things you need to install the software and how to install them:
 
 ```
-Give examples
+Python 3.10+
+Ultrlytics
 ```
 
 ### Installation
 
-A step by step series of examples that tell you how to get a development environment running:
+Once Python is installed:
 
 ```
-Give the example
+pip install Ultralytics
 ```
 
 ## Usage
 
-To use SEENOW, follow these steps:
+To use SEENOW, run:
 
 ```
-Provide examples on how to use the system.
+python IA.py
 ```
 
 ## Built With
