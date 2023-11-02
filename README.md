@@ -8,11 +8,8 @@
   - [Installation](#installation)
 - [Usage](#usage)
 - [Built With](#built-with)
-- [Contributing](#contributing)
-- [Versioning](#versioning)
 - [Authors](#authors)
 - [License](#license)
-- [Acknowledgments](#acknowledgments)
 
 ## Introduction
 
@@ -60,13 +57,6 @@ Provide examples on how to use the system.
 - [Python](https://www.python.org/) - The programming language used for backend development.
 - [React Native](https://reactnative.dev/) - A framework for building native apps using React.
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://github.com/JuanArano17/SEENOW/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/JuanArano17/SEENOW/tags).
 
 ## Authors
 
@@ -80,9 +70,3 @@ See also the list of [contributors](https://github.com/YourUsername/SEENOW/contr
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
-## Acknowledgments
-
-- Hat tip to anyone whose code was used.
-- Inspiration.
-- etc.
