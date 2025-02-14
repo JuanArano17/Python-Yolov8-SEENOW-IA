@@ -2,7 +2,7 @@
 import time
 import threading
 import logging
-import cv2  # OpenCV para la visualización y anotación
+import cv2
 import queue
 from AI import IADetector
 
@@ -10,56 +10,49 @@ class YOLODetector:
     def __init__(self, camera_source=0, detection_interval=0):
         """
         Inicializa el detector:
-         - camera_source: Fuente de video (por defecto la cámara 0 como entero).
-         - detection_interval: Tiempo mínimo (en segundos) entre cada procesamiento.
+          - camera_source: Fuente de video (por defecto la cámara 0).
+          - detection_interval: Tiempo mínimo (en segundos) entre detecciones. Si es 0 se procesa cada frame.
         """
         self.camera_source = camera_source
         self.detection_interval = detection_interval
-        self.detector = IADetector("yolov8x.pt")
-        self.frame_queue = queue.Queue()  # Cola para pasar frames al hilo principal
+        self.detector = IADetector("yolov5s.pt")
+        self.frame_queue = queue.Queue()  # Cola para pasar frames anotados al hilo principal
         self.running = True
 
     def detection_worker(self):
-        logging.info("Iniciando detección en streaming...")
-        try:
-            # Se utiliza show=False para procesar la imagen y agregar anotaciones personalizadas
-            results = self.detector.predict(source=self.camera_source, stream=True, show=False)
-        except Exception as e:
-            logging.error(f"Error al iniciar la predicción: {e}")
+        logging.info("Iniciando detección en streaming con YOLOv5...")
+        cap = cv2.VideoCapture(self.camera_source)
+        if not cap.isOpened():
+            logging.error("No se pudo abrir la cámara.")
             return
 
-        for result in results:
-            if not self.running:
+        while self.running:
+            ret, frame = cap.read()
+            if not ret:
+                logging.error("No se pudo leer frame de la cámara.")
                 break
+
+            # Voltear la imagen horizontalmente para que se vea como espejo
+            frame = cv2.flip(frame, 1)
+
             start_time = time.time()
-            
-            # Obtener la imagen del frame (puede venir en 'orig_img' o en 'imgs')
-            if hasattr(result, 'orig_img'):
-                frame = result.orig_img
-            elif hasattr(result, 'imgs'):
-                frame = result.imgs[0]
-            else:
-                logging.error("No se pudo obtener la imagen del frame.")
-                continue
 
-            # Hacer una copia para las anotaciones
+            # Realizar la predicción sobre el frame
+            results = self.detector.predict(frame)
             annotated_frame = frame.copy()
-            
             try:
-                if result.boxes.shape[0] > 0:
-                    # Iterar sobre cada detección para extraer las coordenadas y la clase
-                    for box, cls in zip(result.boxes.xyxy, result.boxes.cls):
-                        # Convertir las coordenadas a enteros
-                        x1, y1, x2, y2 = [int(coord) for coord in box]
-                        class_name = self.detector.model.names[int(cls)]
-                        # Dibujar el rectángulo y colocar el nombre
-                        cv2.rectangle(annotated_frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                        cv2.putText(annotated_frame, class_name, (x1, y1 - 10),
-                                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+                # Iterar sobre las detecciones. Cada detección es un tensor con [x1, y1, x2, y2, conf, cls]
+                for detection in results.xyxy[0]:
+                    x1, y1, x2, y2, conf, cls = detection
+                    x1, y1, x2, y2 = int(x1.item()), int(y1.item()), int(x2.item()), int(y2.item())
+                    class_name = results.names[int(cls.item())]
+                    cv2.rectangle(annotated_frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    cv2.putText(annotated_frame, class_name, (x1, y1 - 10),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
             except Exception as e:
-                logging.error(f"Error al procesar el frame: {e}")
+                logging.error(f"Error al procesar las detecciones: {e}")
 
-            # Enviar el frame anotado a la cola para mostrarlo en el hilo principal
+            # Enviar el frame anotado a la cola para su visualización
             self.frame_queue.put(annotated_frame)
 
             if self.detection_interval != 0:
@@ -67,7 +60,8 @@ class YOLODetector:
                 wait_time = max(self.detection_interval - detection_time, 0)
                 logging.info(f"Esperando {wait_time:.2f} segundos para la siguiente detección.")
                 time.sleep(wait_time)
-        
+
+        cap.release()
         logging.info("Terminando detection_worker.")
     
     def start_detection(self):

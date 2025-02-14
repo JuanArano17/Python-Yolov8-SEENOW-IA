@@ -1,16 +1,21 @@
 # ia.py
-from ultralytics import YOLO
+import torch
 
 class IADetector:
-    def __init__(self, model_path="yolov8x.pt"):
+    def __init__(self, model_path="yolov5s.pt"):
+        """
+        Carga el modelo YOLOv5 utilizando Torch Hub.
+        En este ejemplo se utiliza la versión 's' (small), pero se puede cambiar por 'm', 'l', etc.
+        """
         try:
-            self.model = YOLO(model_path)
+            # Se descarga y carga el modelo YOLOv5s preentrenado
+            self.model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
         except Exception as e:
-            raise Exception(f"Error al cargar el modelo: {e}")
+            raise Exception(f"Error al cargar el modelo YOLOv5: {e}")
     
-    def predict(self, source, stream=True, show=False):
+    def predict(self, frame):
         """
-        Realiza la predicción utilizando el modelo YOLO.
-        Se configura show=False para permitir la personalización de la visualización.
+        Realiza la detección sobre un frame.
         """
-        return self.model.predict(source=source, stream=stream, show=show)
+        results = self.model(frame)
+        return results
