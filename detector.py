@@ -4,7 +4,7 @@ import threading
 import logging
 import cv2
 import queue
-from ia import load_yolov5_model, load_yolov8_model
+from AI import load_yolov5_model, load_yolov8_model
 
 class YOLODetectorV5:
     def __init__(self, camera_source=0, detection_interval=0):
