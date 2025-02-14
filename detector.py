@@ -7,7 +7,7 @@ import queue
 from AI import IADetector
 
 class YOLODetector:
-    def __init__(self, camera_source=0, detection_interval=1):
+    def __init__(self, camera_source=0, detection_interval=0):
         """
         Inicializa el detector:
          - camera_source: Fuente de video (por defecto la cámara 0 como entero).
@@ -62,10 +62,11 @@ class YOLODetector:
             # Enviar el frame anotado a la cola para mostrarlo en el hilo principal
             self.frame_queue.put(annotated_frame)
 
-            detection_time = time.time() - start_time
-            wait_time = max(self.detection_interval - detection_time, 0)
-            logging.info(f"Esperando {wait_time:.2f} segundos para la siguiente detección.")
-            time.sleep(wait_time)
+            if self.detection_interval != 0:
+                detection_time = time.time() - start_time
+                wait_time = max(self.detection_interval - detection_time, 0)
+                logging.info(f"Esperando {wait_time:.2f} segundos para la siguiente detección.")
+                time.sleep(wait_time)
         
         logging.info("Terminando detection_worker.")
     
